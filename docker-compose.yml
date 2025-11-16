@@ -1,0 +1,35 @@
+services:
+
+  mysql:
+    image: mysql:5.7.22
+    tty: true
+    ports:
+      - "3310:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./mysql_logs:/var/log/mysql
+      - ./mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+    env_file: .env
+  
+  app:
+    build:
+      context: .
+      dockerfile: ./images/Dockerfile
+    env_file: .env
+    volumes:
+      - .:/app
+    ports:
+      - "127.0.0.1:5000:5000"
+      - "40000:40000"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    environment:
+      - HOME=/tmp
+      - GOCACHE=/tmp/go-build
+      - GOMODCACHE=/tmp/go-mod
+      - GOFLAGS=-buildvcs=false
+      - GODEBUG=asyncpreemptoff=1
+    
+

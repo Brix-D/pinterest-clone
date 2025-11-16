@@ -1,0 +1,6 @@
+/vendor
+.env
+mysql
+mysql_logs
+
+tmp
